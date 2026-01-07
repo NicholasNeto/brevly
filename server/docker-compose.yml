@@ -1,0 +1,16 @@
+services:
+  pg:
+    image: bitnami/postgresql:latest
+    container_name: brevly_postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: brevly
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: docker
+    volumes:
+        - pgdata:/var/lib/postgresql/data
+        
+volumes:
+  pgdata:
