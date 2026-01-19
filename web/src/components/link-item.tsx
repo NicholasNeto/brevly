@@ -34,7 +34,7 @@ export function LinkItem({ link }: LinkItemProps) {
         </a>
 
         <a 
-          href={`/r/${link.shortUrl}`} 
+          href={`${link.shortUrl}`} 
           // target="_blank" 
           // rel="noopener noreferrer"
         >
