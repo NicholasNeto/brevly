@@ -1,19 +1,3 @@
-// import "dotenv/config";
-
-// import { app } from "./app";
-// import { env } from "./env";
-
-// app
-//   .listen({
-//     port: env.PORT,
-//     host: "0.0.0.0",
-//   })
-//   .then( async () => {
-    
-//     console.log(`🚀 Server running on port ${env.PORT}`);
-//   });
-
-
 import "dotenv/config";
 
 import { app } from "./app";
@@ -23,7 +7,6 @@ import { links } from "./db/schema";
 
 async function bootstrap() {
   try {
-    // 🧪 sanity check
     await db.select().from(links).limit(1);
 
     console.log("✅ Database connected");

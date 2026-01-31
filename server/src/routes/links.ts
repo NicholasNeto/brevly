@@ -3,10 +3,12 @@ import { z } from "zod";
 import { db } from "../db";
 import { links } from "../db/schema";
 import { eq, desc, sql } from "drizzle-orm";
+import { generateLinksCsv } from "../utils/genereteLinksCsv";
+import { Readable } from "node:stream"
+import { uploadFileToStorage } from "../infra/storage/upload-file-to-storage";
 
 export async function linksRoutes(app: FastifyInstance) {
   app.post("/links", async (request, reply) => {
-    // 1. Validação do body
     const bodySchema = z.object({
       originalUrl: z.string().url(),
       shortUrl: z
@@ -19,7 +21,6 @@ export async function linksRoutes(app: FastifyInstance) {
 
     const { originalUrl, shortUrl } = bodySchema.parse(request.body);
 
-    // 2. Verificar se shortUrl já existe
     const existingLink = await db
       .select()
       .from(links)
@@ -32,7 +33,6 @@ export async function linksRoutes(app: FastifyInstance) {
       });
     }
 
-    // 3. Inserir no banco
     const [link] = await db
       .insert(links)
       .values({
@@ -41,7 +41,6 @@ export async function linksRoutes(app: FastifyInstance) {
       })
       .returning();
 
-    // 4. Retornar resposta
     return reply.status(201).send(link);
   });
 
@@ -109,4 +108,28 @@ export async function linksRoutes(app: FastifyInstance) {
     // Redireciona
     return reply.redirect(link.originalUrl);
   });
+
+
+  app.get("/links/download", async (request, reply) => {
+    const allLinks = await db
+      .select()
+      .from(links)
+      .orderBy(desc(links.createdAt))
+
+    const csv = generateLinksCsv(allLinks)
+  
+    const csvStream = Readable.from(csv)
+  
+    const file = await uploadFileToStorage({
+      folder: "downloads-links",
+      fileName: "links.csv",
+      contentType: "text/csv",
+      contentStream: csvStream,
+    })
+  
+    return reply.send({
+      url: file.url,
+    })
+  })
+  
 }
