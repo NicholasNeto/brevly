@@ -1,24 +1,17 @@
-import { CenteredBox } from "../components/centeredBox";
 
 export default function NotFound() {
   return (
- <div className="min-h-screen flex items-center justify-center">
-      <CenteredBox
-        imageSrc="/src/assets/404.svg"
-        imageAlt="blalba"
-        title="Link não encontrado"
+    <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+      <h1 className="text-4xl font-bold">404</h1>
+      <p className="text-gray-500">
+        O link que você tentou acessar não existe ou expirou.
+      </p>
+      <a
+        href="/"
+        className="px-4 py-2 bg-blue-500 text-white rounded"
       >
-        <div className="flex flex-col">
-          <span className="text-gray-500 text-sm mx-auto">
-            O link que você está tentando acessar não existe, foi removido ou é uma URL inválida. Saiba mais em{" "}
-            <a href="/" className="text-blue-600 underline mx-auto">
-              brev.ly.
-            </a>
-          </span>
-        </div>
-
-      </CenteredBox>
+        Voltar para a home
+      </a>
     </div>
   );
 }
-
