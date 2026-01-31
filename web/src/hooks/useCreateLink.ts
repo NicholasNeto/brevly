@@ -1,8 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiFetch } from "../services/api";
-import type { LinkItemType } from "../types/linksTypes";
 
-type CreateLinkDTO = {
+import type { LinkItemType } from "../types/linksTypes";
+import { apiFetch } from "../services/api";
+
+export type CreateLinkDTO = {
   originalUrl: string;
   shortUrl: string;
 };
@@ -12,7 +13,7 @@ export function useCreateLink() {
 
   return useMutation({
     mutationFn: (data: CreateLinkDTO) =>
-        apiFetch<LinkItemType>("/links", {
+      apiFetch<LinkItemType>("/links", {
         method: "POST",
         body: JSON.stringify(data),
       }),

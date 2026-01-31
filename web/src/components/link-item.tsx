@@ -2,6 +2,8 @@ import { useDeleteLink } from "../hooks/useDeleteLink";
 import { CopyIcon, TrashIcon } from "@phosphor-icons/react";
 import type { LinkItemType } from "../types/linksTypes";
 import { copyToClipboard } from "../utils/copyToClipboard";
+
+
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 interface LinkItemProps {
@@ -22,7 +24,11 @@ export function LinkItem({ link }: LinkItemProps) {
   }
 
   return (
+    <div>
+      <hr className="w-full max-w-516px h-px bg-gray-200 border-0 mx-auto" />
+    
     <div className="flex items-center py-2 gap-4 w-full">
+      
       <div className="flex flex-col gap-1 flex-1">
         <a
           href={`${BASE_URL}/${link.shortUrl}`}
@@ -35,8 +41,6 @@ export function LinkItem({ link }: LinkItemProps) {
 
         <a 
           href={`${link.shortUrl}`} 
-          // target="_blank" 
-          // rel="noopener noreferrer"
         >
           {`brev.ly/${link.shortUrl}`}
         </a>
@@ -64,6 +68,7 @@ export function LinkItem({ link }: LinkItemProps) {
           <TrashIcon size={16} />
         </button>
       </div>
+    </div>
     </div>
   );
 }

@@ -17,7 +17,6 @@ export function useDeleteLink() {
     },
 
     onSuccess: () => {
-      // Atualiza a lista após deletar
       queryClient.invalidateQueries({
         queryKey: ["links"],
       });
