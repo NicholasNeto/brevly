@@ -4,11 +4,12 @@ const envSchema = z.object({
   PORT: z.coerce.number().default(3333),
   DATABASE_URL: z.string().url().startsWith("postgresql://"),
 
-  CLOUDFLARE_ACCOUNT_ID: z.string().optional(),
-  CLOUDFLARE_ACCESS_KEY_ID: z.string().optional(),
-  CLOUDFLARE_SECRET_ACCESS_KEY: z.string().optional(),
-  CLOUDFLARE_BUCKET: z.string().optional(),
-  CLOUDFLARE_PUBLIC_URL: z.string().optional(),
-});
+  CLAOUDFLARE_ACCOUNT_ID: z.string(),
+  CLAOUDFLARE_ACCESS_KEY_ID: z.string(),
+  CLAOUDFLARE_SECRET_ACCESS_KEY: z.string(),
+  CLAOUDFLARE_BUCKETE: z.string(),
+  CLAOUDFLARE_PUBLIC_URL: z.string().url(),
+
+})
 
 export const env = envSchema.parse(process.env);

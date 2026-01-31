@@ -6,6 +6,7 @@ export const app = fastify();
 
 app.register(cors, {
   origin: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
 });
 
 app.register(linksRoutes);
