@@ -3,7 +3,7 @@ import { Title } from "../components/ui/title";
 import { LinkItem } from "../components/link-item";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 import {
   createLinkSchema,
   type CreateLinkFormData,
@@ -12,39 +12,36 @@ import { useLinks } from "../hooks/useLinks";
 import { useCreateLink } from "../hooks/useCreateLink";
 import { useDownloadLinksCsv } from "../hooks/useDownloadLinksCsv";
 import { handleCreateLinkError } from "../utils/handleCreateLinkError";
+import { TopLoadingBar } from "../components/topLoadingBar";
 
 
 function Home() {
-
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset
+    reset,
   } = useForm<CreateLinkFormData>({
     resolver: zodResolver(createLinkSchema),
   });
 
-
   const { download } = useDownloadLinksCsv();
 
-  const { data: links } = useLinks();
+  const { data: links, isLoading: isLoadingLinks } = useLinks();
   const createLink = useCreateLink();
-
-  
 
   const onSubmit = async (data: CreateLinkFormData) => {
     try {
       await createLink.mutateAsync(data);
-      reset()
+      reset();
       toast.success("Link criado com sucesso!");
     } catch (err) {
       handleCreateLinkError(err);
     }
   };
-  
+
   const downloadLinks = () => {
-    download()
+    download();
   };
 
   return (
@@ -60,7 +57,6 @@ function Home() {
           <section className="bg-white p-4 rounded-lg flex flex-col gap-4 ">
             <Title>Novo link</Title>
 
-            
             <div className="flex flex-col gap-1">
               <label
                 className={`text-sm ${
@@ -143,20 +139,27 @@ function Home() {
           </section>
         </form>
 
-        
-        <section className="bg-white p-4 rounded-lg flex-1 px-4">
-         {/* <TopLoadingBar isLoading={true} /> */}
+        <section className="relative bg-white p-4 rounded-lg flex-1 px-4">
+          <TopLoadingBar isLoading={isLoadingLinks} />
+
           <div className="w-full p-3 py-2 flex items-center justify-between">
             <Title>Meus Links</Title>
-            <button className="flex items-center justify-center gap-2 bg-gray-200 text-gray-500 text-lg rounded px-1 py-2" onClick={downloadLinks}>
+
+            <button
+              className="flex items-center justify-center gap-2 bg-gray-200 text-gray-500 text-lg rounded px-1 py-2"
+              onClick={downloadLinks}
+            >
               <TrayArrowDownIcon size={20} />
               Baixar CSV
             </button>
           </div>
-          
 
           <div className="w-full">
-            {links && links.length > 0 ? (
+            {isLoadingLinks ? (
+              <div className="py-10 text-center text-gray-400 text-sm">
+                Carregando links...
+              </div>
+            ) : links && links.length > 0 ? (
               links.map((link) => <LinkItem key={link.id} link={link} />)
             ) : (
               <div className="w-full py-10 flex flex-col items-center justify-center gap-3">
@@ -169,7 +172,7 @@ function Home() {
           </div>
         </section>
       </div>
-       <ToastContainer /> 
+      <ToastContainer />
     </main>
   );
 }
