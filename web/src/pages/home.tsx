@@ -13,7 +13,8 @@ import { useCreateLink } from "../hooks/useCreateLink";
 import { useDownloadLinksCsv } from "../hooks/useDownloadLinksCsv";
 import { handleCreateLinkError } from "../utils/handleCreateLinkError";
 import { TopLoadingBar } from "../components/topLoadingBar";
-
+import { useState } from "react";
+import { Spinner } from "../components/ui/spinner";
 
 function Home() {
   const {
@@ -26,6 +27,7 @@ function Home() {
   });
 
   const { download } = useDownloadLinksCsv();
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const { data: links, isLoading: isLoadingLinks } = useLinks();
   const createLink = useCreateLink();
@@ -40,8 +42,15 @@ function Home() {
     }
   };
 
-  const downloadLinks = () => {
-    download();
+  const downloadLinks = async () => {
+    try {
+      setIsDownloading(true);
+      download();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   return (
@@ -146,17 +155,20 @@ function Home() {
             <Title>Meus Links</Title>
 
             <button
-              className="flex items-center justify-center gap-2 bg-gray-200 text-gray-500 text-lg rounded px-1 py-2"
+              className="flex items-center justify-center gap-2 bg-gray-200 text-gray-500 text-lg rounded px-3 py-2 disabled:opacity-60"
               onClick={downloadLinks}
+              disabled={isDownloading}
             >
-              <TrayArrowDownIcon size={20} />
-              Baixar CSV
+              {isDownloading ? <Spinner /> : <TrayArrowDownIcon size={20} />}
+
+              {isDownloading ? "Baixando..." : "Baixar CSV"}
             </button>
           </div>
 
           <div className="w-full">
             {isLoadingLinks ? (
-              <div className="py-10 text-center text-gray-400 text-sm">
+              <div className="py-10 flex flex-col items-center justify-center text-gray-400 text-sm gap-2">
+                <Spinner />
                 Carregando links...
               </div>
             ) : links && links.length > 0 ? (
